@@ -16,20 +16,16 @@ var connector = new builder.ChatConnector({
 var bot = new builder.UniversalBot(connector);
 server.post('/api/messages', connector.listen());
 //Bot on
-bot
-		.on(
-				'contactRelationUpdate',
-				function(message) {
+bot.on('contactRelationUpdate',function(message) {
 					if (message.action === 'add') {
 						var name = message.user ? message.user.name : null;
 						var reply = new builder.Message()
-								.address(message.address)
-								.text(
-										"Hello %s... Thanks for adding me. Say 'hello' to see some great demos.",
-										name || 'there');
+						.address(message.address)
+						.text("Hello %s... Thanks for adding me. Say 'hello' to see some great demos.",
+						name || 'there');
 						bot.send(reply);
 					} else {
-						// delete their data
+					// delete their data
 					}
 				});
 bot.on('typing', function(message) {
@@ -58,7 +54,11 @@ bot.dialog('/',
 		  },
 		  function(session) {
 			  session.beginDialog('/symptoms');
+		  },
+		  function(session) {
+			  session.beginDialog('/region');
 		  }
+		  
 		 ]);
 
 bot.dialog('/name', [ 
@@ -90,6 +90,7 @@ bot.dialog('/gender', [
                      	 session.endDialog();
                      		 }
                      		]);
+
 bot.dialog('/symptoms', [ 
                      function(session, args, next) {
                     	 builder.Prompts.text(session, "What's your symptoms?");
@@ -99,6 +100,39 @@ bot.dialog('/symptoms', [
                      	 session.endDialog();
                      		 }
                      		]);
+bot.dialog('/region', [ 
+                       function(session, args, next) {
+                      	 builder.Prompts.text(session, "What's your region?");
+                       		}, 
+                       function(session, results, next) {
+                       	 session.dialogData.region = results.response;
+                       	 session.endDialog();
+                       		 }
+                       		]);
+
+//var symptoms= "cold,cough,fever";
+
+bot.dialog('/diseases', [ 
+                         function(session, args) {
+                         var diseaseDB = {
+                        		 'flu': 'cold, cough, fever',
+                        		 'strepThroat': 'cold, cough, fever, sorethroat',
+                        		 'earinfection': 'cold, cough, fever, earpain',
+                        		 'acidreflux': 'regurgitation,dyspepsia, heartburn',
+                        		 'Dyspepsia': 'Burping,Nauseaaftereating,Stomachfullness,Upperabdominalpain,discomfort'  
+                        	}
+                         }
+                     ]);                     
+                       
+bot.dialog('/symptomschecker', [ 
+                 function(session,args){
+                    	   for (var key in diseaseDB) {
+                       		  if (diseaseDB.symptoms(key)) {
+                       		    console.log(key,value  + " -> " + diseaseDB[key], +diseaseDB[value]);
+                       		  }
+                    	   }
+                       }
+              ]);
 
 
 
@@ -106,6 +140,7 @@ bot.dialog('/symptoms', [
 
 
 
+//if (value.includes(userSymptoms)) { display key (disease name)}
 
 
 
@@ -214,4 +249,5 @@ bot.dialog('/symptoms', [
 //      }else{
 //        session.send('Sorry I do not understand you...');
 //      }
-//});
+//]);
+
