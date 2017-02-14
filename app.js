@@ -161,23 +161,26 @@ bot.dialog('/symptomsChecker', [
 ]);
 var recommendationDB = {
 		'flu': 'crocin',
-		'allergy': 'allegra'
+		'allergy': 'allegra',
+		'heart attack': 'Call 101 or rush to the nearest hospital'
+
 };
 
 bot.dialog('/recommendation', [
                                 function (session) {
-                                    var disease = session.userData.diseaseDiagnosed;
+                                    var patientDiseaseName = session.userData.diseaseDiagnosed;
                                     var recommendationFound = false;
                                     var recommendationGiven = 'NA';
 
                                     
-      lodash.each(recommendationDB, function (diseaseName, recommendationName) {
+      lodash.each(recommendationDB, function (recommendationName, diseaseName) {
+    	  if (!recommendationFound)  {
                                 
-         if (lodash.includes(diseaseName, diseaseDiagnosed)) {
+         if (lodash.includes(diseaseName, patientDiseaseName)) {
                                                 recommendationFound = true;
                                                 recommendationGiven = recommendationName;
                                             }
-                                        
+    	  }        
                                     });
                                     session.userData.recommendationGivenName = recommendationGiven;
                                     session.send("recommendation Given : " + recommendationGiven);
