@@ -168,7 +168,7 @@ var recommendationDB = {
 
 bot.dialog('/recommendation', [
                                 function (session) {
-                                    var patientDiseaseName = session.userData.diseaseDiagnosed;
+                                    var patientDiseaseName = session.userData.diagnosedDiseaseName;
                                     var recommendationFound = false;
                                     var recommendationGiven = 'NA';
 
