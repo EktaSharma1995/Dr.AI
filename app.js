@@ -141,21 +141,17 @@ bot.dialog('/symptomsChecker', [
     function (session) {
         var symptoms = session.userData.symptoms;
         var cleanedSymptomsFromPatient = symptoms.replace(/\s/g, '').toLowerCase();
-        var diseaseFound = false;
-        var diseaseDiagnosed = 'NA';
-
+        var multipleSymptomList = [];
+        
         lodash.each(symptomDB, function (diseaseName, symptomNames) {
-            if (!diseaseFound)  {
                 var cleanedSymptomKey = symptomNames.replace(/\s/g, '').toLowerCase();
 
                 if (lodash.includes(cleanedSymptomKey, cleanedSymptomsFromPatient)) {
-                    diseaseFound = true;
-                    diseaseDiagnosed = diseaseName;
-                }
-            }
+                	multipleSymptomList.push(diseaseName);
+                 }
         });
-        session.userData.diagnosedDiseaseName = diseaseDiagnosed;
-        session.send("Diagnosed Disease : " + diseaseDiagnosed);
+        session.userData.diagnosedDiseaseNameList = multipleSymptomList;
+        session.send("Diagnosed Disease : " + multipleSymptomList.toString());
         session.endDialog();
     }
 ]);
