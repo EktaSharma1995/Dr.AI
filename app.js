@@ -66,6 +66,9 @@ bot.dialog('/', [
         session.beginDialog('/multipleDiseases');
     }, 
     function (session, results) {
+        session.beginDialog('/carousel');
+    }, 
+    function (session, results) {
         session.beginDialog('/recommendation');
     }, 
     function (session, results) {
@@ -164,11 +167,22 @@ function (session) {
          var reply = new builder.Message(session)
          .attachmentLayout(builder.AttachmentLayout.carousel)
          .attachments(cards);
-
          session.send(reply);
          session.endDialog();
-                	}
-			]);
+    }
+]);
+
+bot.dialog('/carousel', [
+                        function (session) {
+                        var multipleDiseaseOption = session.userData.diagnosedDiseaseNameList;
+                            
+                        lodash.each(multipleSymptomList, function (diseaseName, symptomNames) {
+                        exports.getCardsAttachments = function(){};  
+                        session.endDialog();
+                        });
+                        
+                        }
+                        ]);
 
 function getCardsAttachments(session) {
     return [
